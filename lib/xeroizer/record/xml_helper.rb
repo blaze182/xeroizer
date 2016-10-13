@@ -25,7 +25,7 @@ module Xeroizer
                 when :decimal     then BigDecimal.new(element.text)
                 when :date        then Date.parse(element.text)
                 when :datetime    then Time.parse(element.text)
-                when :datetime_utc then ActiveSupport::TimeZone['UTC'].parse(element.text).utc.round(3)
+                when :datetime_utc, :datetime_utc_rw then ActiveSupport::TimeZone['UTC'].parse(element.text).utc.round(3)
                 when :belongs_to  
                   model_name = field[:model_name] ? field[:model_name].to_sym : element.name.to_sym
                   Xeroizer::Record.const_get(model_name).build_from_node(element, parent)
@@ -110,7 +110,9 @@ module Xeroizer
                 end
                 b.tag!(field[:api_name], real_value)
                 
-              when :datetime    then b.tag!(field[:api_name], value.utc.strftime("%Y-%m-%dT%H:%M:%S"))
+              when :datetime, :datetime_utc_rw
+                b.tag!(field[:api_name], value.utc.strftime("%Y-%m-%dT%H:%M:%S"))
+
               when :belongs_to  
                 value.to_xml(b)
                 nil

@@ -43,6 +43,7 @@ module Xeroizer
         def date(field_name, options = {});       define_simple_attribute(field_name, :date, options); end
         def datetime(field_name, options = {});   define_simple_attribute(field_name, :datetime, options); end
         def datetime_utc(field_name, options = {});   define_simple_attribute(field_name, :datetime_utc, options); end
+        def datetime_utc_rw(field_name, options = {});   define_simple_attribute(field_name, :datetime_utc_rw, options); end
         
         def guid(field_name, options = {})
           # Ensure all automated Id conversions are changed to ID.
