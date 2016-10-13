@@ -33,7 +33,7 @@ module Xeroizer
 
       decimal :amount
 
-      date :date
+      datetime :date
       string :bank_transfer_id, :api_name => "BankTransferID"
       decimal :currency_rate
       string :from_bank_transaction_id, :api_name => "FromBankTransactionID"
