@@ -6,6 +6,24 @@ module Xeroizer
       set_permissions :read
 
       include AttachmentModel::Extensions
+
+    protected
+
+      def parse_records(response, elements, paged_results)
+        elements.each do | element |
+          new_record = model_class.build_from_node(element, self)
+          # BankTransfer endpoint fails to add ERROR status to nodes on batch save
+          # From Xero side (it's beta atm).
+          # if element.attribute('status').try(:value) == 'ERROR'
+            element.xpath('.//ValidationError').each do |err|
+              new_record.errors = [] if new_record.errors.nil?
+              new_record.errors << err.text.gsub(/^\s+/, '').gsub(/\s+$/, '')
+            end
+          # end
+          new_record.paged_record_downloaded = paged_results
+          response.response_items << new_record
+        end
+      end
     end
 
     class BankTransfer < Base
